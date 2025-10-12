@@ -20,7 +20,7 @@ def cislo_text(cislo):
     elif cislo == 100:
         return "sto"
     else:
-        return "mimo rozsah"
+        return "Nelze zadat větší číslo"
 
 
 if __name__ == "__main__":
