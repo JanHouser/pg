@@ -21,7 +21,7 @@ def vrat_prvocisla(maximum):
 
     aktualní = 0
 
-    while aktualní < maximum:
+    while aktualní <= maximum:
      if je_prvocislo(aktualní):
       result.append(aktualní)
      aktualní += 1
