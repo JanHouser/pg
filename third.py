@@ -6,8 +6,8 @@ def je_prvocislo(cislo):
    if cislo == 2:
     return True
    
-   for i in range(2, cislo):
-      if cislo % i == 0:
+   for delitel in range(2, cislo):
+      if cislo % delitel == 0:
          return False
    return True
 
