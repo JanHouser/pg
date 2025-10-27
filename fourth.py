@@ -1,14 +1,108 @@
-def je_tah_mozny(figurka, cilova_pozice, obsazene_pozice):
-    """
-    Ověří, zda se figurka může přesunout na danou pozici.
+def je_tah_mozny_pesec(pesec, cilova_pozice, obsazene_pozice):
+    r, s = pesec
+    r2, s2 = cilova_pozice
 
-    :param figurka: Slovník s informacemi o figurce (typ, pozice).
-    :param cilova_pozice: Cílová pozice na šachovnici jako n-tice (řádek, sloupec).
-    :param obsazene_pozice: Množina obsazených pozic na šachovnici.
+    if s2 != s or (r2, s2) in obsazene_pozice:
+        return False
+    if r2 == r + 1:
+        return True
+    if r == 2 and r2 == r + 2 and (r + 1, s) not in obsazene_pozice:
+        return True
     
-    :return: True, pokud je tah možný, jinak False.
-    """
-    # Implementace pravidel pohybu pro různé figury zde.
+    return False
+
+def je_tah_mozny_vez(vez, cilova_pozce, obsazene_pozice):
+    r, s = vez
+    r2, s2 = cilova_pozce
+
+    if (r2, s2) in obsazene_pozice:
+        return False
+    
+    if r != r2 and s != s2:
+        return False
+    
+    if r == r2:
+        for i in range(min(s, s2) + 1, max(s, s2)):
+            if (r, i) in obsazene_pozice:
+                return False
+            
+    else:
+        for i in range(min(r, r2) + 1, max(r, r2)):
+            if (i, s) in obsazene_pozice:
+                return False
+    return True
+
+def je_tah_mozny_strelec(strelec, cilova_pozice, obsazene_pozice):
+    r, s = strelec
+    r2, s2 = cilova_pozice
+    dr = r2 - r
+    ds = s2 - s
+    
+    if abs(dr) != abs(ds) or (dr == 0 and ds == 0):
+        return False
+    
+    krok_r = 1 if dr > 0 else -1
+    krok_s = 1 if ds > 0 else -1
+
+    for i in range(1, abs(dr)):
+        mezilehla_pozice = (r + i * krok_r, s + i * krok_s)
+        if mezilehla_pozice in obsazene_pozice:
+            return False
+        
+    if cilova_pozice in obsazene_pozice:
+        return False
+    
+    return True
+
+def je_tah_mozny_jezdec(jezdec, cilova_pozice, obsazene_pozice):
+    r, s = jezdec
+    r2, s2 = cilova_pozice
+
+    if (r2, s2) in obsazene_pozice:
+        return False
+
+    return (abs(r2 - r), abs(s2 - s)) in [(1, 2), (2, 1)]
+
+def je_tah_mozny_dama(dama, cilova_pozice, obsazene_pozice):
+    return (
+        je_tah_mozny_vez(dama, cilova_pozice, obsazene_pozice)
+        or je_tah_mozny_strelec(dama, cilova_pozice, obsazene_pozice)
+    )
+
+def je_tah_mozny_kral(kral, cilova_pozice, obsazene_pozice):
+    r, s = kral
+    r2, s2 = cilova_pozice
+
+    dr = abs(r2 - r)
+    ds = abs(s2 - s)
+
+    if dr <= 1 and ds <= 1 and (dr != 0 or ds != 0):
+        if cilova_pozice in obsazene_pozice:
+            return False
+        return True
+    return False
+
+def je_tah_mozny(figurka, cilova_pozice, obsazene_pozice):
+    typ = figurka["typ"]
+    pozice = figurka["pozice"]
+
+    if not (1 <= cilova_pozice[0] <= 8 and 1 <= cilova_pozice[1] <= 8):
+        return False
+    if typ == "pěšec":
+        return je_tah_mozny_pesec(pozice, cilova_pozice, obsazene_pozice)
+    elif typ == "věž":
+        return je_tah_mozny_vez(pozice, cilova_pozice, obsazene_pozice)
+    elif typ == "střelec":
+        return je_tah_mozny_strelec(pozice, cilova_pozice, obsazene_pozice)
+    elif typ == "jezdec":
+        return je_tah_mozny_jezdec(pozice, cilova_pozice, obsazene_pozice)
+    elif typ == "dáma":
+        return je_tah_mozny_dama(pozice, cilova_pozice, obsazene_pozice)
+    elif typ == "král":
+        return je_tah_mozny_kral(pozice, cilova_pozice, obsazene_pozice)
+
+
+    
     return False
 
 
