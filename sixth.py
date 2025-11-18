@@ -13,6 +13,7 @@ def download_url_and_get_all_hrefs(url):
     response = requests.get(url)
     if response.status_code != 200:
         raise Exception(f"chybný status kód: {response.status_code}")
+    
     html = response.text
 
     hrefs = []
@@ -30,6 +31,8 @@ def download_url_and_get_all_hrefs(url):
 
         link = html[start_quote:end_quote]
         hrefs.append(link)
+
+        start = end_quote + 1
 
     return hrefs
 
