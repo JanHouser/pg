@@ -43,7 +43,19 @@ class Piece(ABC):
 
 class Pawn(Piece):
     def possible_moves(self):
-        return []
+        row, col = self.position
+        moves = []
+
+        if self.color == 'white':
+            next_row = row + 1
+            if self.is_position_on_board((next_row, col)):
+                moves.append((next_row, col))
+        elif self.color == 'black':
+            next_row = row - 1
+            if self.is_position_on_board((next_row, col)):
+                moves.append((next_row, col))
+
+        return moves
     
     def __str__(self):
         return f'Pawn({self.color}) at position {self.position}'
@@ -63,7 +75,7 @@ class Knight(Piece):
             (row + 1, col + 2), (row + 1, col - 2),
             (row - 1, col + 2), (row - 1, col - 2)
         ]
-        # Filtruje tahy, které jsou mimo šachovnici
+        
         final_moves = []
         for move in moves:
             if self.is_position_on_board(move):
@@ -75,19 +87,94 @@ class Knight(Piece):
 
 
 class Bishop(Piece):
-    pass
+    def possible_moves(self):
+        """
+        Vrací všechny teoreticky možné tahy střelce (diagonální pohyb).
+        """
+        row, col = self.position
+        moves = []
+        directions = [(-1, -1), (-1, 1), (1, -1), (1, 1)] 
+
+        for dr, dc in directions:
+            for i in range(1, 8): 
+                new_row = row + dr * i
+                new_col = col + dc * i
+                move = (new_row, new_col)
+                if self.is_position_on_board(move):
+                    moves.append(move)
+                else:
+                    break
+
+        return moves
+
+    def __str__(self):
+        return f'Bishop({self.color}) at position {self.position}'
 
 
 class Rook(Piece):
-    pass
+    def possible_moves(self):
+        """
+        Vrací všechny teoreticky možné tahy věže (horizontální a vertikální pohyb).
+        """
+        row, col = self.position
+        moves = []
+        
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+        for dr, dc in directions:
+            for i in range(1, 8):
+                new_row = row + dr * i
+                new_col = col + dc * i
+                move = (new_row, new_col)
+                if self.is_position_on_board(move):
+                    moves.append(move)
+                else:
+                    break
+        return moves
+
+    def __str__(self):
+        return f'Rook({self.color}) at position {self.position}'
 
 
 class Queen(Piece):
-    pass
+    def possible_moves(self):
+        """
+        Vrací všechny teoreticky možné tahy dámy (kombinace věže a střelce).
+        """
+        rook_moves = Rook(self.color, self.position).possible_moves()
+        bishop_moves = Bishop(self.color, self.position).possible_moves()
+        return rook_moves + bishop_moves
+
+    def __str__(self):
+        return f'Queen({self.color}) at position {self.position}'
+
 
 
 class King(Piece):
-    pass
+    def possible_moves(self):
+        """
+        Vrací všechny možné tahy krále (jedno pole ve všech směrech).
+        """
+        row, col = self.position
+        moves = []
+        for dr in [-1, 0, 1]:
+            for dc in [-1, 0, 1]:
+                if dr == 0 and dc == 0:
+                    continue
+                
+                new_row = row + dr
+                new_col = col + dc
+                move = (new_row, new_col)
+
+                if self.is_position_on_board(move):
+                    moves.append(move)
+
+        return moves
+
+    def __str__(self):
+        return f'King({self.color}) at position {self.position}'
+
+
 
 
 if __name__ == "__main__":
