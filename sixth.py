@@ -1,5 +1,6 @@
 import sys
 import requests
+import re
 
 
 def download_url_and_get_all_hrefs(url):
@@ -16,23 +17,9 @@ def download_url_and_get_all_hrefs(url):
     
     html = response.text
 
-    hrefs = []
-    start = 0
-    while True:
-        start_link = html.find('<a href="', start)
-        if start_link == -1:
-            break
-
-        start_quote = start_link + len('<a href="')
-
-        end_quote = html.find('"', start_quote)
-        if end_quote == -1:
-            break
-
-        link = html[start_quote:end_quote]
-        hrefs.append(link)
-
-        start = end_quote + 1
+    # Regulární výraz pro nalezení href atributu bez ohledu na pořadí atributů
+    pattern = r'<a\s+[^>]*href=["\']([^"\']+)["\']'
+    hrefs = re.findall(pattern, html, re.IGNORECASE)
 
     return hrefs
 
