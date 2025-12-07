@@ -2,7 +2,29 @@ def bin_to_dec(binarni_cislo):
     # funkce spocita hodnotu predavaneho binarniho cisla (binarni_cislo muze byt str i int!!!)
     # 111 -> 7
     # "101" -> 5
-    return 0
+
+    if isinstance(binarni_cislo, int):
+        binarni_cislo = str(binarni_cislo)
+
+    elif not isinstance(binarni_cislo, str):
+        raise ValueError("Binární číslo musí být string nebo integer")
+
+    if any(digit not in "01" for digit in binarni_cislo):
+        raise ValueError("Binární číslo může obsahovat pouze 0 a 1")
+    
+    binarni_cislo = binarni_cislo[::-1]
+
+    vaha = 1
+    soucet = 0
+    for digit in binarni_cislo:
+        if digit == "1":
+            soucet += vaha
+        vaha = vaha * 2
+
+    return soucet
+
+
+        
 
 
 def test_bin_to_dec():
