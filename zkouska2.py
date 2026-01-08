@@ -23,9 +23,9 @@ def convert_to_czk(amount, currency):
     response = requests.get(url)
     response.raise_for_status()
 
-    data = response.text.splitlines()
+    lines = response.text.splitlines()
 
-    for line in data[2:]:
+    for line in lines[2:]:
         parts = line.split('|')
         if len(parts) >= 5:
             kód = parts[3]

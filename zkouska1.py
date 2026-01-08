@@ -14,12 +14,14 @@
 
 def process_numbers(numbers):
     result = []
+
     for cislo in numbers:
-        if isinstance(cislo, (int, float)) and not isinstance(cislo, bool):
-            if cislo > 5:
-                result.append(cislo * 2)
-        else:
+        if type(cislo) not in (int, float):
             break
+        if cislo > 5:
+            cislo = cislo * 2
+            result.append(cislo)
+
     return result
 
 
