@@ -13,8 +13,14 @@
 
 
 def process_numbers(numbers):
-    # ZDE NAPIŠTE VÁŠ KÓD
-    return []
+    result = []
+    for cislo in numbers:
+        if isinstance(cislo, (int, float)) and not isinstance(cislo, bool):
+            if cislo > 5:
+                result.append(cislo * 2)
+        else:
+            break
+    return result
 
 
 # Unit testy
