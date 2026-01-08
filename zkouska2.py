@@ -19,8 +19,23 @@ import requests
 
 
 def convert_to_czk(amount, currency):
-    # ZDE NAPIŠTE VÁŠ KÓD
-    return 0.0
+    url = "http://www.cnb.cz/cs/financni_trhy/devizovy_trh/kurzy_devizoveho_trhu/denni_kurz.txt"
+    response = requests.get(url)
+    response.raise_for_status()
+
+    lines = response.text.splitlines()
+
+    for line in lines[2:]:
+        parts = line.split('|')
+        if len(parts) >= 5:
+            kód = parts[3]
+            množství = int(parts[2])
+            kurz_retezec = parts[4].replace(',', '.')
+            kurz = float(kurz_retezec)
+            if kód == currency:
+                return round(amount * (kurz / množství), 2)
+    
+    raise ValueError(f"Currency {currency} not found in the exchange rate list.")
 
 
 # Unit testy
